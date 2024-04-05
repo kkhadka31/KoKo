@@ -16,3 +16,5 @@ The server port is 8080, and to run it simply you can use a IDE like Intellij an
 Or, use .jar file available at target directory.
 
 You can now use postman as a client to run different services available in this app, you can refer to the openapi.yml file for it.
+
+Make sure to use JWT token for the requests that are not whitelisted. You can obtain JWT token by using login or register services.
