@@ -1,0 +1,590 @@
+openapi: 3.0.2
+info:
+  title: KoKo API
+  version: 1.0.0
+  description: KoKo API using OpenAPI
+  contact:
+    name: Koshish Khadka
+    url: "https://yettobedefined.com"
+    email: kkhadka31@gmail.com
+tags:
+  - name: Login
+  - name: Register
+  - name: Post
+  - name: Comment
+  - name: Logout
+  - name: Person
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationResponse"
+        '401':
+          description: Unauthorized
+      operationId: loginPerson
+
+  /register:
+    post:
+      tags:
+        - Register
+      summary: User Registration
+      requestBody:
+        required: true
+        content:
+          applciation/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        '201':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationResponse"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: registerPerson
+
+  /post:
+    post:
+      tags:
+        - Post
+      summary: User Post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonPost"
+      responses:
+        '201':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonPost"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: addPost
+
+  /addComment:
+    post:
+      tags:
+        - Comment
+      summary: User Comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonComment"
+      responses:
+        '201':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonComment"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      operationId: addComment
+
+  /persons:
+    get:
+      tags:
+        - Person
+      summary: Get all persons
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonWithoutPassword"
+      operationId: getPersons
+
+  /person/{personId}:
+    get:
+      tags:
+        - Person
+      summary: Get a single person by ID
+      parameters:
+        - name: personId
+          in: path
+          description: ID of the person to fetch
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonWithoutPassword"
+        '404':
+          description: Person not found
+      operationId: getPersonById
+
+  /posts:
+    get:
+      tags:
+        - Post
+      summary: Get all posts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonPost"
+        '404':
+          description: Posts not found
+      operationId: getAllPosts
+
+  /post/{personPostId}:
+    get:
+      tags:
+        - Post
+      summary: Get a single post by PersonPostId
+      parameters:
+        - name: personPostId
+          in: path
+          description: ID of the post to fetch
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonPost"
+        '404':
+          description: Post not found
+      operationId: getPostByPersonPostId
+
+  /comments:
+    get:
+      tags:
+        - Comment
+      summary: Get all comments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonComment"
+        '404':
+          description: Comments not found
+      operationId: getAllComments
+
+  /postComments/{personPostId}:
+    get:
+      tags:
+        - Comment
+      summary: Get all comments of a particular post
+      parameters:
+        - name: personPostId
+          in: path
+          description: ID of the post to fetch all the comments
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonComment"
+        '404':
+          description: Comments not found
+      operationId: getCommentsByPersonPostId
+
+  /userComments/{userId}:
+    get:
+      tags:
+        - Comment
+      summary: Get all comments of a particular user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonComment"
+        '404':
+          description: Comments not found
+      operationId: getCommentsByUserId
+
+  /comment/{personCommentId}:
+    get:
+      tags:
+        - Comment
+      summary: Get a single comment by CommentID
+      parameters:
+        - name: personCommentId
+          in: path
+          description: ID of the comment to fetch
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonComment"
+        '404':
+          description: Post not found
+      operationId: getCommentByPersonCommentId
+
+  /editPost:
+    patch:
+      tags:
+        - Post
+      summary: Edit a post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonPost"
+      responses:
+        '200':
+          description: Post edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonPost"
+        '404':
+          description: Post not found
+      operationId: editPost
+
+  /editComment:
+    patch:
+      tags:
+        - Comment
+      summary: Edit a comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonComment"
+      responses:
+        '200':
+          description: Comment edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonComment"
+        '404':
+          description: Comment not found
+      operationId: editCommentByPersonCommentId
+
+  /postWithComments/{personPostId}:
+    get:
+      tags:
+        - Post
+        - Comment
+      summary: Get a post with comments
+      parameters:
+        - name: personPostId
+          in: path
+          description: ID of the post to fetch
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostWithComments"
+        '404':
+          description: Post not found
+      operationId: getPostWithComments
+
+  /postsWithComments/{userId}:
+    get:
+      tags:
+        - Post
+        - Comment
+      summary: Get all posts of a particular user by user id
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PostsWithComments"
+        '404':
+          description: Post not found
+      operationId: getPostsWithCommentsByUserId
+
+  /postsWithComments:
+    get:
+      tags:
+        - Post
+        - Comment
+      summary: Get all posts with Comments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PostsWithComments"
+      operationId: getPostsWithComments
+
+  /deletePost/{personPostId}:
+    delete:
+      tags:
+        - Post
+      summary: Delete a post
+      parameters:
+        - name: personPostId
+          in: path
+          description: ID of the post to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post deleted successfully
+        '404':
+          description: Post not found
+      operationId: deletePostByPersonPostId
+
+  /deleteComment/{personCommentId}:
+    delete:
+      tags:
+        - Comment
+      summary: Delete a comment
+      parameters:
+        - name: personCommentId
+          in: path
+          description: ID of the comment to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comment deleted successfully
+        '404':
+          description: Comment not found
+      operationId: deleteCommentByPersonCommentId
+
+
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+        password:
+          type: string
+
+    AuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    RegisterRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+        firstName:
+          type: string
+        secondName:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        gender:
+          type: string
+          enum: [male, female, other]
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        userName:
+          type: string
+      required:
+        - firstName
+        - email
+        - password
+        - userName
+
+    PersonPost:
+      type: object
+      properties:
+        personPostId:
+          type: integer
+        userId:
+          type: integer
+        userName:
+          type: string
+        post:
+          type: string
+
+    PersonComment:
+      type: object
+      properties:
+        personCommentId:
+          type: integer
+        personPostId:
+          type: integer
+        userId:
+          type: integer
+        userName:
+          type: string
+        comment:
+          type: string
+
+    PersonWithoutPassword:
+      type: object
+      properties:
+        userId:
+          type: integer
+        firstName:
+          type: string
+        secondName:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+        gender:
+          type: string
+        phoneNumber:
+          type: string
+        userName:
+          type: string
+      required:
+        - userId
+        - firstName
+        - secondName
+        - fullName
+        - email
+        - gender
+        - phoneNumber
+        - userName
+
+    PostWithComments:
+      type: object
+      properties:
+        userId:
+          type: integer
+        personPostId:
+          type: integer
+        userName:
+          type: string
+        post:
+          type: string
+        PersonComment:
+          type: array
+          items:
+            $ref: "#/components/schemas/PersonComment"
+      required:
+        - userId
+        - personPostId
+        - personCommentId
+        - userName
+        - post
+        - comment
+
+    PostsWithComments:
+      type: object
+      properties:
+        userId:
+          type: integer
+        personPostId:
+          type: integer
+        userName:
+          type: string
+        post:
+          type: string
+        PersonComment:
+          type: array
+          items:
+            $ref: "#/components/schemas/PersonComment"
+      required:
+        - userId
+        - personPostId
+        - personCommentId
+        - userName
+        - post
+        - comment
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
