@@ -1,12 +1,16 @@
 # KoKo
 My Webapp
 
-Details:
+**Details:**
 
 This is Java Spring boot app.
-Use Case -> Simple Blog application, so far powered by java spring boot and mysql.
+Use Case -> Simple Blog application, so far powered by java spring boot and mysql. Currently the application spring boot is deployed on Amazon EC2 and the mysql server is deployed on Amazon RDS. The frontend is under development along with lots of other features, services and tech stacks. 
 
-How to run:
+**Test this application:**
+To test this application, you can use client like postman, please refer to the openapi.yml file to test different api provided by this application. URL -> http://3.144.218.85:8080/rc/
+Note: Please don't flood the host with heavy traffic because Amazon charges good money for heavy use cases :)
+
+How to run in local:
 
 You'll need to run a sql server, and create tables which is available in the path -> ./KoKo/src/main/java/com/koshish/SQL
 
