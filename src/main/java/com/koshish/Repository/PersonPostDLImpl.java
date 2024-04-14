@@ -2,7 +2,9 @@ package com.koshish.Repository;
 
 import com.koshish.Model.PersonPost;
 import com.koshish.Model.PostWithComments;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class PersonPostDLImpl {
 
-    DB db = new DB();
+    @Inject
+    private DB db;
 
     public List<PersonPost> getAllPeoplePost() throws SQLException {
         List<PersonPost> personPostList = new ArrayList<>();
@@ -24,7 +28,7 @@ public class PersonPostDLImpl {
         ResultSet resultSet = null;
 
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -44,7 +48,7 @@ public class PersonPostDLImpl {
     public PersonPost addPersonPost(PersonPost personPost) throws SQLException {
         String insertQuery = "INSERT INTO PERSON_POST (userId, userName, post) values "
                 + "(?, ?, ?)";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1, personPost.getUserId());
         preparedStatement.setString(2, personPost.getUserName());
         preparedStatement.setString(3, personPost.getPost());
@@ -71,7 +75,7 @@ public class PersonPostDLImpl {
         ResultSet resultSet = null;
         PersonPost personPost = new PersonPost();
 
-        preparedStatement = db.connection.prepareStatement(query);
+        preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, personPostId);
         resultSet = preparedStatement.executeQuery();
 
@@ -90,7 +94,7 @@ public class PersonPostDLImpl {
         String query = "UPDATE PERSON_POST SET post = ? WHERE personPostId = ?";
 
         PreparedStatement preparedStatement = null;
-        preparedStatement = db.connection.prepareStatement(query);
+        preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setString(1, personPost.getPost());
         preparedStatement.setInt(2, personPost.getPersonPostId());
 
@@ -109,7 +113,7 @@ public class PersonPostDLImpl {
                 "FROM PERSON_POST pp " +
                 "LEFT JOIN PERSON_COMMENT pc ON pp.personPostId = pc.personPostId " +
                 "WHERE pp.personPostId = ?";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, personPostId);
         ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -151,7 +155,7 @@ public class PersonPostDLImpl {
                 "FROM PERSON_POST pp " +
                 "LEFT JOIN PERSON_COMMENT pc ON pp.personPostId = pc.personPostId " +
                 "WHERE pp.userId = ?";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, userId);
         ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -189,7 +193,7 @@ public class PersonPostDLImpl {
         String query = "SELECT pp.userId, pp.personPostId, pp.userName AS postUserName, pp.post, pc.personCommentId, pc.userName AS commentUserName, pc.comment " +
                 "FROM PERSON_POST pp " +
                 "LEFT JOIN PERSON_COMMENT pc ON pp.personPostId = pc.personPostId ";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         ResultSet resultSet = preparedStatement.executeQuery();
 
         Map<Integer, PostWithComments> map = new HashMap<>();
@@ -219,7 +223,7 @@ public class PersonPostDLImpl {
 
     public boolean deletePostByPersonPostId(int personPostId) throws SQLException {
         String query = "DELETE FROM KoKo_DBOne.PERSON_POST WHERE personPostId = ?";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, personPostId);
         int rowAffected = preparedStatement.executeUpdate();
         return rowAffected > 0;

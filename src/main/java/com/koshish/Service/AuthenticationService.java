@@ -24,6 +24,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     @Inject
     private final PasswordEncoder passwordEncoder;
+    @Inject
+    private PersonDLImpl personDLImpl;
 
     public AuthenticationResponse register(RegisterRequest request) {
 
@@ -52,8 +54,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUserName(),
                 loginRequest.getPassword()));
-        PersonDLImpl personDL = new PersonDLImpl();
-        Person person = personDL.getPersonByUserName(loginRequest.getUserName());
+        Person person = personDLImpl.getPersonByUserName(loginRequest.getUserName());
         var jwtToken = jwtUtil.generateToken(person);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

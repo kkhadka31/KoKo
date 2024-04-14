@@ -3,13 +3,11 @@ package com.koshish.RestController;
 import com.koshish.Model.LoginRequest;
 import com.koshish.Model.AuthenticationResponse;
 import com.koshish.Model.RegisterRequest;
+import com.koshish.Model.TestOne;
 import com.koshish.Service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
@@ -18,6 +16,8 @@ import javax.inject.Inject;
 public class AuthenticationController {
     @Inject
     private AuthenticationService authenticationService;
+    @Inject
+    private TestOne testOne;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerPerson (
@@ -52,5 +52,11 @@ public class AuthenticationController {
             // Return a 400 status code for bad request
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error("Bad Request"));
         }
+    }
+
+    @PostMapping("/testing")
+    public String test() {
+        testOne.setId(1);
+        return String.valueOf(testOne.getId());
     }
 }

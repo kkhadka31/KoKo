@@ -1,7 +1,9 @@
 package com.koshish.Repository;
 
 import com.koshish.Model.PersonComment;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,9 +11,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class PersonCommentDLImpl {
 
-    DB db = new DB();
+    @Inject
+    private DB db;
 
     public List<PersonComment> getAllPeopleComment() throws SQLException {
         List<PersonComment> personCommentList = new ArrayList<>();
@@ -21,7 +25,7 @@ public class PersonCommentDLImpl {
         ResultSet resultSet = null;
 
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -42,7 +46,7 @@ public class PersonCommentDLImpl {
     public PersonComment addComment(PersonComment personComment) throws SQLException {
         String query = "INSERT INTO PERSON_COMMENT (personPostId, userId, userName, comment) " +
                 "VALUES (?, ?, ?, ?)";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1, personComment.getPersonPostId());
         preparedStatement.setInt(2, personComment.getUserId());
         preparedStatement.setString(3, personComment.getUserName());
@@ -67,7 +71,7 @@ public class PersonCommentDLImpl {
     public List<PersonComment> getCommentsByPersonPostId(int personPostId) throws SQLException {
         String query = "SELECT * from PERSON_COMMENT WHERE personPostId = ?";
         List<PersonComment> personCommentList = new ArrayList<>();
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, personPostId);
 
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -88,7 +92,7 @@ public class PersonCommentDLImpl {
     public List<PersonComment> getCommentsByUserId(int userId) throws SQLException {
         String query = "SELECT * from PERSON_COMMENT WHERE userId = ?";
         List<PersonComment> personCommentList = new ArrayList<>();
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, userId);
 
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -109,7 +113,7 @@ public class PersonCommentDLImpl {
     public PersonComment getCommentByPersonCommentId(int personCommentId) throws SQLException {
         String query = "SELECT * from PERSON_COMMENT WHERE personCommentId = ?";
         PersonComment personComment = new PersonComment();
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, personCommentId);
 
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -129,7 +133,7 @@ public class PersonCommentDLImpl {
         String query = "UPDATE PERSON_COMMENT SET comment = ? WHERE personCommentId = ?";
 
         PreparedStatement preparedStatement = null;
-        preparedStatement = db.connection.prepareStatement(query);
+        preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setString(1, personComment.getComment());
         preparedStatement.setInt(2, personComment.getPersonCommentId());
 
@@ -142,7 +146,7 @@ public class PersonCommentDLImpl {
 
     public boolean deleteCommentByPersonCommentId(int personCommentId) throws SQLException {
         String query = "DELETE FROM KoKo_DBOne.PERSON_COMMENT WHERE personCommentId = ?";
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, personCommentId);
         int rowAffected = preparedStatement.executeUpdate();
         return rowAffected > 0;
