@@ -8,18 +8,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.inject.Inject;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
+    @Inject
+    PersonDLImpl personDLImpl;
+
     @Bean
     public UserDetailsService userDetailsService() {
-        PersonDLImpl personDLImpl = new PersonDLImpl();
         return username -> personDLImpl.getPersonByUserName(username);
 //        return personDLImpl::getPersonByUserName;
     }

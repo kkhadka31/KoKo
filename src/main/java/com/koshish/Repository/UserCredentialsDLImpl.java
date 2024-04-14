@@ -1,20 +1,25 @@
 package com.koshish.Repository;
 
 import com.koshish.Security.PasswordService;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class UserCredentialsDLImpl {
-    DB db = new DB();
+
+    @Inject
+    private DB db;
 
     public void storePasswordInDatabase(String username, String hashedPassword, byte[] salt) {
 
         String insertQuery = "INSERT INTO USER_CREDENTIALS (username, password, salt) VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = db.connection.prepareStatement(insertQuery);
+            preparedStatement = db.getConnection().prepareStatement(insertQuery);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, hashedPassword);
             preparedStatement.setBytes(3, salt);
@@ -37,7 +42,7 @@ public class UserCredentialsDLImpl {
         ResultSet resultSet = null;
 
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             preparedStatement.setString(1, userName);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -72,7 +77,7 @@ public class UserCredentialsDLImpl {
         ResultSet resultSet = null;
 
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             preparedStatement.setString(1, userName);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -103,7 +108,7 @@ public class UserCredentialsDLImpl {
         ResultSet resultSet = null;
 
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             preparedStatement.setString(1, userName);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -126,7 +131,7 @@ public class UserCredentialsDLImpl {
         String insertQuery = "INSERT INTO PERSON (firstName, secondName, fullName, password, email, gender, phoneNumber, userName, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = db.connection.prepareStatement(insertQuery);
+            preparedStatement = db.getConnection().prepareStatement(insertQuery);
 //            preparedStatement.setLong(1, id);
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, secondName);

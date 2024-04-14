@@ -2,21 +2,28 @@ package com.koshish.Repository;
 
 import com.koshish.Model.Person;
 import com.koshish.Model.Role;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class PersonDLImpl {
 
-    DB db = new DB();
+    @Inject
+    private DB db;
+
 
     public List<Person> getPersons() throws SQLException {
         String query = "SELECT * FROM PERSON";
         List<Person> personList = new ArrayList<>();
-        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
         ResultSet resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
@@ -41,7 +48,7 @@ public class PersonDLImpl {
         ResultSet resultSet = null;
         Person person = new Person();
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
 
@@ -77,7 +84,7 @@ public class PersonDLImpl {
         ResultSet resultSet = null;
         Person person = new Person();
         try {
-            preparedStatement = db.connection.prepareStatement(selectQuery);
+            preparedStatement = db.getConnection().prepareStatement(selectQuery);
             preparedStatement.setString(1, userName);
             resultSet = preparedStatement.executeQuery();
 
@@ -108,7 +115,7 @@ public class PersonDLImpl {
 //    public Person addPerson(Person person) throws SQLException {
 //        String query = "INSERT INTO PERSON (id, firstName, secondName, fullName, email, gender, phoneNumber, password, username) values "
 //                + "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//        PreparedStatement preparedStatement = db.connection.prepareStatement(query);
+//        PreparedStatement preparedStatement = db.getConnection().prepareStatement(query);
 //        preparedStatement.setLong(1, person.getId());
 //        preparedStatement.setString(2, person.getFirstName());
 //        preparedStatement.setString(3, person.getSecondName());
