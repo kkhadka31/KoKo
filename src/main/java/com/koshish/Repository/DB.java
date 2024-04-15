@@ -1,6 +1,8 @@
 package com.koshish.Repository;
 
+import com.koshish.Service.SecretsDecryptor;
 import jakarta.annotation.PostConstruct;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +17,19 @@ public class DB {
 
 	private Connection connection;
 
+	@Inject
+	private SecretsDecryptor secretsDecryptor;
+
 	@PostConstruct
 	public void init() {
 		String url = env.getProperty("spring.datasource.url");
 		String username = env.getProperty("spring.datasource.username");
 		String password = env.getProperty("spring.datasource.password");
+		String secretKey = env.getProperty("jasypt.encryptor.password");
+		String encryptAlgo = env.getProperty("jasypt.encryptor.algorithm");
 
 		try {
+			password = secretsDecryptor.decrypt(secretKey, password, encryptAlgo);
 			connection = DriverManager.getConnection(url, username, password);
 		} catch (SQLException e) {
 			throw new RuntimeException("Failed to connect to database", e);
