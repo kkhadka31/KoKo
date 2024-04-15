@@ -19,7 +19,8 @@ import javax.inject.Inject;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final JWTUtil jwtUtil = new JWTUtil();
+    @Inject
+    private final JWTUtil jwtUtil;
     @Inject
     private final AuthenticationManager authenticationManager;
     @Inject

@@ -5,10 +5,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.NoArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +20,16 @@ import java.util.function.Function;
 
 @Service
 public class JWTUtil {
-    //This is a random 256 bit hex secret key
-    private static final String SECRET_KEY = "207b943b47217b60e0cfa1956298b35669fff014afbd8e9ebba5bbe8526c26d8";
+
+    @Inject
+    private Environment env;
+
+    private static String SECRET_KEY;
+
+    @PostConstruct
+    public void init() {
+        SECRET_KEY = env.getProperty("jasypt.encryptor.password");
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
